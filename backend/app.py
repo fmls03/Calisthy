@@ -2,7 +2,7 @@ from flask import Flask, redirect
 import os
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import *
-
+from flask_cors import CORS
 
 from homepage import homepage_bp
 
@@ -13,6 +13,9 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = secret_key
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://fmls03:Schipilliti03@localhsot/Calisthy'
 app.congig['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config.from_object(__name__)
+
+CORS(app, resources={r'/*': {'origins':'*'}})
 
 db = SQLAlchemy(app)
 

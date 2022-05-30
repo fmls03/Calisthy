@@ -1,9 +1,12 @@
-from flask import Flask
+from flask import Flask, jsonify
+from flask_login import login_fresh
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import *
 from flask_marshmallow import Marshmallow
 from passlib.hash import sha256_crypt
 import os
+from flask_cors import CORS
+from login import *
 
 secret_key = str(os.urandom(256))
 
@@ -13,8 +16,12 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://fmls03:Schipilliti03@lo
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config.from_object(__name__)
 
-mc = Marshmallow(app)
+
+ma = Marshmallow(app)
 db = SQLAlchemy(app)
+
+
+app.register_blueprint(login_bp)
 
 class User(db.Model):
     __tablename__ = 'user'
@@ -34,17 +41,40 @@ class User(db.Model):
         self.height = height
         self.weight = weight
 
+    def to_json(self):        
+        return {'id': self.id,
+                "username": self.name,
+                "email": self.email,
+                'height': self.height,
+                'weight': self.weight
+                }
+
+    def is_authenticated(self):
+        return True
+
+    def is_active(self):   
+        return True           
+
+    def is_anonymous(self):
+        return False          
+
+    def get_id(self):         
+        return str(self.id)
+
+
+
 class Training_plan(db.Model):
     __tablename__ = 'training_plan'
     id = db.Column(db.Integer, autoincrement= True, primary_key = True)
-    creator = db.Column(db.VARCHAR(255), db.ForeignKey('user.username'), nullable= False)
-    date = db.Column(db.DATE, nullable = False)
-    private = db.Column(db.Boolean, nullable = False)
+    creator = db.Column(db.VARCHAR(255), db.ForeignKey('user.username'))
+    date = db.Column(db.DATE)
+    private = db.Column(db.Boolean)
 
     def __init__(self, creator, date, private):
         self.creator = creator
         self.date = date
         self.private = private
+
 
 class Exercise(db.Model):
     __tablename__ = 'exercise'
@@ -76,6 +106,14 @@ class Plan_exercise(db.Model):
         self.sets = sets
         self.reps = reps
         self.rest = rest
+
+
+
+
+def fn():
+    return jsonify('bau')
+
+print(app)
 
 if __name__ == '__main__':
     app.run()

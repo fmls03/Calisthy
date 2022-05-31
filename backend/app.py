@@ -32,7 +32,8 @@ class User(db.Model):
     height = db.Column(db.Integer, nullable = False)
     weight = db.Column(db.Integer, nullable = False)
 
-    Training_plan = db.relationship('Training_plane', backref='user')
+    training_plan = db.relationship('Training_plan', back_populates='user')
+
 
     def __init__(self, username, email, passw, height, weight):
         self.username = username
@@ -67,8 +68,12 @@ class Training_plan(db.Model):
     __tablename__ = 'training_plan'
     id = db.Column(db.Integer, autoincrement= True, primary_key = True)
     creator = db.Column(db.VARCHAR(255), db.ForeignKey('user.username'))
+    plan_id = db.Column(db.Integer, db.ForeignKey('plan_exercise.id'))
+    plan = db.relationship('Plan_exercise')
     date = db.Column(db.DATE)
     private = db.Column(db.Boolean)
+
+    user = db.relationship('User', back_populates='training_plan')
 
     def __init__(self, creator, date, private):
         self.creator = creator
@@ -82,8 +87,6 @@ class Exercise(db.Model):
     name = db.Column(db.VARCHAR(255), unique = True, nullable = False)
     description = db.Column(db.VARCHAR(600))
     path = db.Column(db.VARCHAR(255), nullable = False)
-
-    plan_exercise = db.relationship('Plan_exercise', backref='exercise')
 
     def __init__(self, name, description, path):
         self.name = name
@@ -99,6 +102,7 @@ class Plan_exercise(db.Model):
     sets = db.Column(db.Integer, nullable=False)
     reps = db.Column(db.Integer, nullable=False)
     rest = db.Column(db.Integer, nullable=False)
+    ex = db.relationship('Exercise')
 
     def __init__(self, exercise, user, sets, reps, rest):
         self.exercise = exercise

@@ -24,7 +24,6 @@ flask-marshmallow==0.14.0
 Flask-Session==0.4.0
 Flask-SQLAlchemy==2.5.1
 greenlet==1.1.2
-gyp==0.1
 httplib2==0.20.2
 idna==3.3
 importlib-metadata==4.6.4

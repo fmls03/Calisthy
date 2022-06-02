@@ -3,10 +3,11 @@ from flask_login import login_fresh
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import *
 from flask_marshmallow import Marshmallow
-from passlib.hash import sha256_crypt
+
 import os
-from flask_cors import CORS
+
 from login import *
+from signup import *
 
 secret_key = str(os.urandom(256))
 
@@ -22,6 +23,7 @@ db = SQLAlchemy(app)
 
 
 app.register_blueprint(login_bp)
+app.register_blueprint(signup_bp)
 
 class User(db.Model):
     __tablename__ = 'user'
@@ -44,7 +46,7 @@ class User(db.Model):
 
     def to_json(self):        
         return {'id': self.id,
-                "username": self.name,
+                "username": self.username,
                 "email": self.email,
                 'height': self.height,
                 'weight': self.weight

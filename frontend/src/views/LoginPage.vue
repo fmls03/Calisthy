@@ -1,7 +1,7 @@
 <template>
     <div class="d-flex align-center justify-center" id="div">
         <v-card class="d-flex flex-column justify-center align-center rounded-xl" width="400" height="300" :elevation="10">
-            <v-card-title>
+            <v-card-title class="mt-5">
                 Login
             </v-card-title>
             <v-card-text >
@@ -9,6 +9,8 @@
                     <v-text-field label="username" v-model="username"></v-text-field>
                     <v-text-field type="password" label="password" v-model="password"></v-text-field>
                     <v-btn class="green" width="70" height="30" v-on:click="sendData()">Login</v-btn>
+                    <p class="ma-5">If you're not already registered click <router-link to="/signup">here</router-link></p>
+
                 </v-form>
                 </v-card-text>
         </v-card>

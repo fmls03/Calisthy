@@ -8,6 +8,7 @@ itsdangerous==2.1.2
 Jinja2==3.1.2
 MarkupSafe==2.1.1
 marshmallow==3.16.0
+marshmallow-sqlalchemy==0.28.0
 packaging==21.3
 passlib==1.7.4
 pyparsing==3.0.9

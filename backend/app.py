@@ -1,5 +1,4 @@
 from flask import Flask, jsonify
-from flask_login import login_fresh
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import *
 from flask_marshmallow import Marshmallow

@@ -1,4 +1,3 @@
-from email.message import EmailMessage
 from passlib.hash import sha256_crypt
 from flask import jsonify, Blueprint, request
 from sqlalchemy import *

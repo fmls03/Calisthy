@@ -4,15 +4,14 @@
             <v-card-title class="mt-5">
                 Login
             </v-card-title>
-            <v-card-text >
                 <v-form class="d-flex align-center flex-column mx-auto" >
                     <v-text-field label="username" v-model="username"></v-text-field>
                     <v-text-field type="password" label="password" v-model="password"></v-text-field>
-                    <v-btn class="green" width="70" height="30" v-on:click="sendData()">Login</v-btn>
+                    <v-btn v-if="username && password" small class="green" width="70" height="30" v-on:click="sendData()">Login</v-btn>
+                    <v-btn v-else disabled class="green" small width="70" height="30" v-on:click="sendData()">Login</v-btn>
                     <p class="ma-5">If you're not already registered click <router-link to="/signup">here</router-link></p>
 
                 </v-form>
-                </v-card-text>
         </v-card>
 
     </div>

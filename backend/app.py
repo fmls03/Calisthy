@@ -20,7 +20,6 @@ app.config.from_object(__name__)
 ma = Marshmallow(app)
 db = SQLAlchemy(app)
 
-
 app.register_blueprint(login_bp)
 app.register_blueprint(signup_bp)
 

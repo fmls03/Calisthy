@@ -1,7 +1,7 @@
 <template>
-  <v-app>
-    <NavBar></NavBar>
-      <router-view/>
+<v-app>
+  <NavBar></NavBar>
+    <router-view/>
   </v-app>
 </template>
 
@@ -14,8 +14,9 @@ export default {
   components:{
     NavBar
   },
-  data: () => ({
-    //
-  }),
+  data() {
+    return{
+    }
+  }
 };
 </script>

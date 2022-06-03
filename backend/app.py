@@ -12,7 +12,7 @@ secret_key = str(os.urandom(256))
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = secret_key   
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://fmls03:Schipilliti03@localhost/Calisthy'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://fmls03:Schipilliti03@192.168.1.105/Calisthy'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config.from_object(__name__)
 

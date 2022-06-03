@@ -1,29 +1,29 @@
 <template>
-    <div>
-        <v-app-bar height="40">
-            {{ $route.name }}
-            
-        </v-app-bar>
-    </div>
+    <v-app-bar id="navbar" class="d-flex flex-row align-center justify-space-between" height="40">
+      
+      <p class="mb-0"> {{ $route.name }} </p>
+      <v-switch @change="darkMode"></v-switch>
+    </v-app-bar>
 
 </template>
 
 <script>
 export default {
-  name: 'App',
-  data: () => ({ 
-      darkMode: false
-    }),
-    methods: {
-      toggleDarkMode: function () {
-        this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
-        this.darkMode = !this.darkMode;
-      }
-    },
-    computed: {
-      switchLabel: function () {
-        return this.darkMode ? 'light' : 'dark';
-      }
+  data() {
+    return {
     }
-};
+  },
+  methods: {
+    darkMode() {
+      this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
+    }
+  }
+}
+
 </script>
+
+<style>
+#navbar{
+  width: 100%;
+}
+</style>

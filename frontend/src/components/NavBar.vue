@@ -1,8 +1,8 @@
 <template>
-    <v-app-bar id="navbar" class="d-flex flex-row align-center justify-space-between" height="40">
-      
-      <p class="mb-0"> {{ $route.name }} </p>
-      <v-switch @change="darkMode"></v-switch>
+    <v-app-bar height="40">
+        <v-toolbar-title>{{$route.name}}</v-toolbar-title>
+        <v-spacer></v-spacer>
+        <v-switch class="mt-5" @change="darkMode"></v-switch>
     </v-app-bar>
 
 </template>
@@ -24,6 +24,6 @@ export default {
 
 <style>
 #navbar{
-  width: 100%;
+  width: 100% !important;
 }
 </style>

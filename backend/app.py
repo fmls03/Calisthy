@@ -7,6 +7,7 @@ import os
 
 from login import *
 from signup import *
+from changeTheme import *
 
 secret_key = str(os.urandom(256))
 
@@ -22,6 +23,7 @@ db = SQLAlchemy(app)
 
 app.register_blueprint(login_bp)
 app.register_blueprint(signup_bp)
+app.register_blueprint(changeTheme_bp)
 
 class User(db.Model):
     __tablename__ = 'user'
@@ -48,6 +50,7 @@ class User(db.Model):
         return {'id': self.id,
                 "username": self.username,
                 "email": self.email,
+                "theme": self.theme,
                 'height': self.height,
                 'weight': self.weight
                 }

@@ -1,7 +1,7 @@
 <template>
     <div class="d-flex align-center flex-column justify-center" id="div">
-        <v-alert :value="alert" dense text type="error" transition="scroll-y-transition" >{{msg}}</v-alert>
-        <v-card class="d-flex flex-column justify-center align-center rounded-xl" width="400" height="320" :elevation="10">
+        <v-alert :value="alert" dense text type="error" transition="scroll-y-transition" elevation="8" >{{msg}}</v-alert>
+        <v-card class="d-flex flex-column justify-center align-center rounded-xl" width="400" height="320" elevation="10">
             <v-card-title class="mt-5">
                 Login
             </v-card-title>
@@ -42,20 +42,26 @@ export default {
                 password: this.password
             };
             let resp = await axios.post(`/api/login`, payload)
-           
-
-
-            if (resp.data === 'wrong password'){
+        
+            if (resp.data === 'wrong password' || resp.data === 'wrong username'){
                 this.alert = true;
                 this.msg = resp.data;
             }
-            else if (resp.data === 'wrong username'){
-                this.alert = true;
-                this.msg = resp.data
-
-            };
-        }
-    }
+            else{
+                                
+                this.$session.set('username', resp.data.username)
+                this.$session.set('email', resp.data.email)
+                this.$session.set('theme', resp.data.theme)
+                this.$session.set('height', resp.data.height)
+                this.$session.set('weight', resp.data.weight)
+                
+                this.$vuetify.theme.dark = this.$session.get('theme');
+                window.location.replace('/home');
+            }
+        
+        },
+       
+    }   
 
 }
 

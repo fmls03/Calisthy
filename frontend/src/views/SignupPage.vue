@@ -54,7 +54,7 @@ export default {
                 };
                 let resp = await axios.post(`/api/signup`, payload)
                 console.log(resp);
-                if (this.alert === 'User already registered'){
+                if (resp.data === 'User already registered'){
                     this.alert = true;
                     this.msg = resp.data;
                 }

@@ -29,6 +29,7 @@ class User(db.Model):
     username = db.Column(db.VARCHAR(255), unique = True, nullable = False)
     email = db.Column(db.VARCHAR(255), unique = True, nullable = False)
     passw = db.Column(db.VARCHAR(255), nullable = False) 
+    theme = db.Column(db.Boolean)
     height = db.Column(db.Integer, nullable = False)
     weight = db.Column(db.Integer, nullable = False)
 

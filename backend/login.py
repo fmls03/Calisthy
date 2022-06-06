@@ -17,6 +17,10 @@ def login_api():
         if user:
             if sha256_crypt.verify(payload.get('password'), user.passw):
                 user =  app.User.to_json(user)
-                return user
+                return jsonify('user logged')
+            else:
+                return jsonify('wrong password')
+        else:
+            return jsonify('wrong username')
     return jsonify('miao')
 

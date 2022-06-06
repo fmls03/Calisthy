@@ -13,11 +13,12 @@ def signup():
         username = payload.get('username')
         email = payload.get('email')
         password = sha256_crypt.hash(payload.get('password'))
+        theme = payload.get('theme')
         height = payload.get('height')
         weight = payload.get('weight')
         user = app.User.query.filter_by(email = email).first()
         if not user:
-            newUser = app.User(username, email, password, height, weight)
+            newUser = app.User(username, email, password, theme, height, weight)
             app.db.session.add(newUser)
             app.db.session.commit()
             app.db.session.refresh(newUser)

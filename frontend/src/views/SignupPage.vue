@@ -1,7 +1,8 @@
 <template>
-    <div class="d-flex justify-center align-center" id="div">
+    <div class="d-flex justify-center flex-column align-center" id="div">
+        <v-alert :value="alert" text dense type="error">{{msg}}</v-alert>
         <v-card class="d-flex flex-column align-center rounded-xl" width="500" height="570" :elevation="10">
-            <v-card-title >Sign Up</v-card-title>
+        <v-card-title >Sign Up</v-card-title>
 
         <v-form class="d-flex flex-column justify-center align-center ">
             <v-text-field class="small" label="Username" v-model="username"></v-text-field>
@@ -32,23 +33,33 @@ export default {
             email: '',
             password: '',
             confirm_password: '',
+            theme: '',
             height: '',
-            weight: ''
+            weight: '',
+
+            alert: false,
+            msg: ''
         };
     },
     methods: {
         async signup(){
-            const payload = {
-                username: this.username,
-                email: this.email,
-                password: this.password,
-                height: this.height,
-                weight: this.weight 
-            };
-            await axios.post(`/api/signup`, payload)
-            .then(response => {console.log(response)
-            });
-        
+            if (this.password === this.confirm_password){
+                const payload = {
+                    username: this.username,
+                    email: this.email,
+                    password: this.password,
+                    theme: this.$vuetify.theme.dark,
+                    height: this.height,
+                    weight: this.weight 
+                };
+                await axios.post(`/api/signup`, payload)
+                .then(response => {console.log(response)
+                });
+            }
+            else{
+                this.alert = true,
+                this.msg = "Passwords don't match"
+            }       
         }
     }
 }

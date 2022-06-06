@@ -1,7 +1,6 @@
 <template>
     <div class="d-flex align-center justify-center" id="div">
-        <v-card class="d-flex flex-column justify-center align-center rounded-xl" width="400" height="32
-        0" :elevation="10">
+        <v-card class="d-flex flex-column justify-center align-center rounded-xl" width="400" height="320" :elevation="10">
             <v-card-title class="mt-5">
                 Login
             </v-card-title>

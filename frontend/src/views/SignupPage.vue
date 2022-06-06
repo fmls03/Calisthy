@@ -52,14 +52,18 @@ export default {
                     height: this.height,
                     weight: this.weight 
                 };
-                await axios.post(`/api/signup`, payload)
-                .then(response => {console.log(response)
-                });
+                let resp = await axios.post(`/api/signup`, payload)
+                console.log(resp);
+                if (this.alert === 'User already registered'){
+                    this.alert = true;
+                    this.msg = resp.data;
+                }
+                
             }
             else{
                 this.alert = true,
                 this.msg = "Passwords don't match"
-            }       
+            }    
         }
     }
 }

@@ -16,16 +16,17 @@ def signup():
         theme = payload.get('theme')
         height = payload.get('height')
         weight = payload.get('weight')
-        user = app.User.query.filter_by(email = email).first()
-        if not user:
+        user_by_email = app.User.query.filter_by(email = email).first()
+        user_by_username = app.User.query.filter_by(username = username).first()
+        if not user_by_email and not user_by_username :
             newUser = app.User(username, email, password, theme, height, weight)
             app.db.session.add(newUser)
             app.db.session.commit()
             app.db.session.refresh(newUser)
 
-            return jsonify('User Added')
+            return 'User Added'
         else:
-            return jsonify('User already registered')
+            return 'User already registered'
 
     return jsonify('bau bau')
 

@@ -36,10 +36,11 @@ class User(db.Model):
     training_plan = db.relationship('Training_plan', back_populates='user')
 
 
-    def __init__(self, username, email, passw, height, weight):
+    def __init__(self, username, email, passw, theme, height, weight):
         self.username = username
         self.email = email
         self.passw = passw
+        self.theme = theme
         self.height = height
         self.weight = weight
 

@@ -1,17 +1,19 @@
 <template>
     <v-app>
+        
         <h1 class="mt-10 ml-4">Le tue schede</h1>
         <div class="d-flex flex-row">
-            <v-card width="250" height="300" class="ml-4 mt-8">
-                <v-card-title>
-                    miao
-                </v-card-title>
-            </v-card>
-            <v-card width="250" height="300" class="ml-4 mt-8">
-                <v-card-title>
-                    miao
-                </v-card-title>
-            </v-card>
+                <v-card width="250" height="300" class="ml-4 mt-8" >
+                    <v-card-title>
+                        miao
+                    </v-card-title>
+                    <v-btn v-on:click="dialog = true"> miao</v-btn>
+                </v-card>
+                <v-card width="250" height="300" class="ml-4 mt-8">
+                    <v-card-title>
+                        miao
+                    </v-card-title>
+                </v-card>
         </div>
     </v-app>
 </template>
@@ -21,7 +23,7 @@ export default {
     name: 'HomePage',
     data () {
         return{
-            
+            dialog: false
         }
     },
     mounted() {

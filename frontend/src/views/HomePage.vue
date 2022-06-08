@@ -1,34 +1,29 @@
 <template>
     <v-app>
-        
-        <h1 class="mt-10 ml-4">Le tue schede</h1>
-        <div class="d-flex flex-row">
-                <v-card width="250" height="300" class="ml-4 mt-8" >
-                    <v-card-title>
-                        miao
-                    </v-card-title>
-                    <v-btn v-on:click="dialog = true"> miao</v-btn>
-                </v-card>
-                <v-card width="250" height="300" class="ml-4 mt-8">
-                    <v-card-title>
-                        miao
-                    </v-card-title>
-                </v-card>
-        </div>
+        <v-dialog class="d-flex" v-model="dialog">
+            <template class="d-flex" v-slot:activator="{ on, attrs }">
+                <h1 class="mt-10 ml-4">Le tue schede</h1>
+                <div class="d-flex flex-wrap">
+                    <v-card v-for="i in items" min-width="230" max-width="250" min-height="300" class="ml-4 mt-8" @click="dialog=true">
+                        <v-card-title>miao</v-card-title>
+                    </v-card>
+                </div>
+            </template>
+        </v-dialog>
     </v-app>
 </template>
 
 <script>
 export default {
     name: 'HomePage',
-    data () {
-        return{
-            dialog: false
+    data() {
+        return {
+            dialog: false,
+            items: [1,2,3,4,5,6,7,8]
         }
     },
     mounted() {
         this.$vuetify.theme.dark = this.$session.get('theme');
     }
 }
-
 </script>

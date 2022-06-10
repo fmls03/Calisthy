@@ -74,4 +74,9 @@ export default {
 #div{
     height: '100%'
 }
+
+.v-text-field{
+    width: 250px !important;
+}
+
 </style>

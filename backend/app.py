@@ -1,5 +1,6 @@
 from flask import Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
+from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 from sqlalchemy import *
 from flask_marshmallow import Marshmallow
 
@@ -8,6 +9,7 @@ import os
 from login import *
 from signup import *
 from changeTheme import *
+from home import *
 
 secret_key = str(os.urandom(256))
 
@@ -18,12 +20,19 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config.from_object(__name__)
 
 
+DB_POOL_SIZE = int(os.getenv("DB_POOL_SIZE", "100"))
+WEB_CONCURRENCY = int(os.getenv("WEB_CONCURRENCY", "2"))
+POOL_SIZE = max(DB_POOL_SIZE // WEB_CONCURRENCY, 5)
+
+app.config['SQLALCHEMY_ENGINE_OPTIONS'] = dict(pool_size=POOL_SIZE, max_overflow=0)
+
 ma = Marshmallow(app)
 db = SQLAlchemy(app)
 
 app.register_blueprint(login_bp)
 app.register_blueprint(signup_bp)
 app.register_blueprint(changeTheme_bp)
+app.register_blueprint(home_bp)
 
 class User(db.Model):
     __tablename__ = 'user'
@@ -55,35 +64,30 @@ class User(db.Model):
                 'weight': self.weight
                 }
 
-    def is_authenticated(self):
-        return True
-
-    def is_active(self):   
-        return True           
-
-    def is_anonymous(self):
-        return False          
-
-    def get_id(self):         
-        return str(self.id)
-
-
 
 class Training_plan(db.Model):
     __tablename__ = 'training_plan'
     id = db.Column(db.Integer, autoincrement= True, primary_key = True)
+    title = db.Column(db.VARCHAR(255))
+    description = db.Column(db.VARCHAR(255))
     creator = db.Column(db.VARCHAR(255), db.ForeignKey('user.username'))
-    plan_id = db.Column(db.Integer, db.ForeignKey('plan_exercise.id'))
-    plan = db.relationship('Plan_exercise')
     date = db.Column(db.DATE)
     private = db.Column(db.Boolean)
 
     user = db.relationship('User', back_populates='training_plan')
 
-    def __init__(self, creator, date, private):
+    def __init__(self, title, description, creator, date, private):
+        self.title = title
+        self.description = description
         self.creator = creator
         self.date = date
         self.private = private
+
+
+class Training_planSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = Training_plan
+        load_istance = True
 
 
 class Exercise(db.Model):
@@ -103,18 +107,20 @@ class Plan_exercise(db.Model):
     __tablename__ = 'plan_exercise'
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     exercise = db.Column(db.VARCHAR(255), db.ForeignKey('exercise.name'))
-    user = db.Column(db.VARCHAR(255), db.ForeignKey('user.username'))
     sets = db.Column(db.Integer, nullable=False)
     reps = db.Column(db.Integer, nullable=False)
     rest = db.Column(db.Integer, nullable=False)
+    training_plan_id = db.Column(db.Integer, db.ForeignKey('training_plan.id')) 
     ex = db.relationship('Exercise')
+    tr = db.relationship('Training_plan')
 
-    def __init__(self, exercise, user, sets, reps, rest):
+    def __init__(self, exercise, user, sets, reps, rest, training_plan_id):
         self.exercise = exercise
         self.user = user
         self.sets = sets
         self.reps = reps
         self.rest = rest
+        self.training_plan_id = training_plan_id
 
 
 

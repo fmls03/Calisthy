@@ -51,19 +51,32 @@ export default {
                     theme: this.$vuetify.theme.dark,
                     height: this.height,
                     weight: this.weight 
-                };
+                }            
+                
+                
                 let resp = await axios.post(`/api/signup`, payload)
                 console.log(resp);
                 if (resp.data === 'User already registered'){
                     this.alert = true;
                     this.msg = resp.data;
                 }
-                
+                else{
+                    this.$session.set('username', resp.data.username)
+                    this.$session.set('email', resp.data.email)
+                    this.$session.set('theme', resp.data.theme)
+                    this.$session.set('height', resp.data.height)
+                    this.$session.set('weight', resp.data.weight)
+                        
+                    this.$vuetify.theme.dark = this.$session.get('theme');
+                    window.location.replace('/home');
+                    
+                }
             }
             else{
                 this.alert = true,
                 this.msg = "Passwords don't match"
-            }    
+                
+            };
         }
     }
 }

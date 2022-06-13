@@ -9,6 +9,15 @@ Vue.use(VueRouter)
 
 const routes = [
   {
+    path: "/",
+    component: LoginPage,
+    beforeEnter: (to, from, next) => {
+      // Your are free to add whatever logic here.
+      // On first visit
+      next("/login")
+    },
+  },
+  {
     path: '/login',
     name: 'Login',
     component: LoginPage

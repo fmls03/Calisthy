@@ -4,6 +4,7 @@ from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 from sqlalchemy import *
 from flask_marshmallow import Marshmallow
 
+
 import os
 
 from login import *
@@ -114,13 +115,17 @@ class Plan_exercise(db.Model):
     ex = db.relationship('Exercise')
     tr = db.relationship('Training_plan')
 
-    def __init__(self, exercise, user, sets, reps, rest, training_plan_id):
+    def __init__(self, exercise, sets, reps, rest, training_plan_id):
         self.exercise = exercise
-        self.user = user
         self.sets = sets
         self.reps = reps
         self.rest = rest
         self.training_plan_id = training_plan_id
+
+class Plan_ExerciseSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = Plan_exercise
+        load_istance = True
 
 
 

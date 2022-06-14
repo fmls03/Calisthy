@@ -4,18 +4,17 @@
             <template class="d-flex" v-slot:activator="{ on, attrs }">
                 <h1 class="mt-10 ml-4">Le tue schede</h1>
                 <div class="d-flex flex-wrap" >   
-                    <v-card v-for="(plan, index) in plans" :key="index" min-width="230" max-width="250" min-height="300" class="ml-4 mt-8" @click="get_plan_exercise(plan.id)">
-                        <v-card-title method="">{{ plan.title }}</v-card-title>
+                    <v-card v-for="(plan, index) in plans" :key="index" min-width="230" max-width="250" min-height="300" class="ml-4 mt-8" @click="get_plan_exercise(plan.id), get_Title_Plan(plan.title)">
+                        <v-card-title>{{ plan.title }}</v-card-title>
                     </v-card>
                 </div>
             </template>
             <v-card>
-                <div v-for="(ex, index) in exercises" :key="index">
-                    <v-card-title>
-                        {{ex.exercise}}
-                    </v-card-title>
+                <v-card-title>{{planTitle}}</v-card-title>
 
-                    <h4 class="font-weight-light">{{ex.exercise}}</h4>
+                <div v-for="(ex, index) in exercises" :key="index" class="d-flex flex-row">
+                    <h4 class="font-weight-bold ml-6"> {{ex.exercise}}</h4>
+                    <h5 class="font-weight-light ml-6">{{ex.reps}} x {{ex.sets}}   ||   {{ex.rest}}</h5>
                     
                 </div>
 
@@ -40,7 +39,8 @@ export default {
             dialog: false,
             items: [1,2,3,4,5],
             plans: [],
-            exercises: []
+            exercises: [],
+            planTitle: ''
         }
     },
     methods: {
@@ -50,23 +50,21 @@ export default {
             };
 
             let resp = await axios.post(`/user/home`, payload);
-
-            console.log(resp);
             this.plans = resp.data;
-            console.log(this.plans);
+        },
+        
+        get_Title_Plan(planTITLE){
+            this.planTitle = planTITLE;
         },
 
         async get_plan_exercise(planID){
             this.dialog = true
             let planid = planID
-            console.log(planid)
             const payload = {
                 plan_id: planid
             }
             let resp = await axios.post(`/user/home/exercises`, payload);
             this.exercises = resp.data;
-            console.log(resp.data.id)
-            console.log(this.exercises)
         },
 
     },

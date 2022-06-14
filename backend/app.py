@@ -1,3 +1,5 @@
+from dataclasses import dataclass
+from this import s
 from flask import Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
@@ -35,8 +37,18 @@ app.register_blueprint(signup_bp)
 app.register_blueprint(changeTheme_bp)
 app.register_blueprint(home_bp)
 
+
+@dataclass
 class User(db.Model):
     __tablename__ = 'user'
+
+    id: int
+    username: str
+    email: str
+    theme: bool
+    height: int
+    weight: int
+
     id = db.Column(db.Integer, autoincrement= True, primary_key = True)
     username = db.Column(db.VARCHAR(255), unique = True, nullable = False)
     email = db.Column(db.VARCHAR(255), unique = True, nullable = False)
@@ -56,18 +68,18 @@ class User(db.Model):
         self.height = height
         self.weight = weight
 
-    def to_json(self):        
-        return {'id': self.id,
-                "username": self.username,
-                "email": self.email,
-                "theme": self.theme,
-                'height': self.height,
-                'weight': self.weight
-                }
 
-
+@dataclass
 class Training_plan(db.Model):
     __tablename__ = 'training_plan'
+
+    id: int
+    title: str
+    description: str
+    creator: str
+    date: str
+    private: bool
+
     id = db.Column(db.Integer, autoincrement= True, primary_key = True)
     title = db.Column(db.VARCHAR(255))
     description = db.Column(db.VARCHAR(255))
@@ -84,15 +96,15 @@ class Training_plan(db.Model):
         self.date = date
         self.private = private
 
-
-class Training_planSchema(ma.SQLAlchemyAutoSchema):
-    class Meta:
-        model = Training_plan
-        load_istance = True
-
-
+@dataclass
 class Exercise(db.Model):
     __tablename__ = 'exercise'
+
+    id: int
+    name: str
+    description: str
+    path: str
+
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     name = db.Column(db.VARCHAR(255), unique = True, nullable = False)
     description = db.Column(db.VARCHAR(600))
@@ -103,17 +115,26 @@ class Exercise(db.Model):
         self.description = description
         self.path = path
 
-
+@dataclass
 class Plan_exercise(db.Model):
     __tablename__ = 'plan_exercise'
+
+    exercise: str
+    sets: int
+    reps: int
+    rest: int
+    training_plan_id: int
+
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    exercise = db.Column(db.VARCHAR(255), db.ForeignKey('exercise.name'))
+    exercise = db.Column(db.VARCHAR(255), db.ForeignKey('exercise.name'), nullable=False)
     sets = db.Column(db.Integer, nullable=False)
     reps = db.Column(db.Integer, nullable=False)
     rest = db.Column(db.Integer, nullable=False)
-    training_plan_id = db.Column(db.Integer, db.ForeignKey('training_plan.id')) 
+    training_plan_id = db.Column(db.Integer, db.ForeignKey('training_plan.id'), nullable = False) 
     ex = db.relationship('Exercise')
     tr = db.relationship('Training_plan')
+
+   
 
     def __init__(self, exercise, sets, reps, rest, training_plan_id):
         self.exercise = exercise
@@ -122,10 +143,6 @@ class Plan_exercise(db.Model):
         self.rest = rest
         self.training_plan_id = training_plan_id
 
-class Plan_ExerciseSchema(ma.SQLAlchemyAutoSchema):
-    class Meta:
-        model = Plan_exercise
-        load_istance = True
 
 
 

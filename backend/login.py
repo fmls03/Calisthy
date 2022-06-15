@@ -16,10 +16,13 @@ def login_api():
         print(users)
         if user:
             if sha256_crypt.verify(payload.get('password'), user.passw):
+                app.db.session.remove()
                 return jsonify(user)
             else:
+                app.db.session.remove()
                 return jsonify('wrong password')
         else:
+            app.db.session.remove()
             return jsonify('wrong username')
     return jsonify('miao')
 

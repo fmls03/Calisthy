@@ -1,5 +1,3 @@
-from crypt import methods
-import json
 from flask import Blueprint, Flask, render_template, request, jsonify, blueprints
 from sqlalchemy import *
 import app
@@ -32,4 +30,11 @@ def watchVideo():
         app.db.session.remove()
         return jsonify(video)
     
-    
+
+
+@home_bp.route('/exercises/list', methods=['GET'])
+def sendExercisesList():
+    if request.method == 'GET':
+        exercises_list = app.Exercise.query.all()
+        return jsonify(exercises_list)
+

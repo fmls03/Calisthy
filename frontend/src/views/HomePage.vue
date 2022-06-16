@@ -2,55 +2,67 @@
     <v-app>
         <div class="d-flex flex-row align-center justify-space-between">
             <h1 class="mt-10 ml-4">Le tue schede</h1>
-            <v-btn width="200" class="mt-10" color="primary" text > Crea nuova scheda</v-btn>
+            <v-btn width="200" class="mt-10" color="primary" text v-on:click="create_new_plan()"> Crea nuova scheda
+            </v-btn>
+            <v-dialog v-model="create_dialog" persistent>
+                <NewPlan :exercises="exercises" :create_dialog="create_dialog" @close="close_create_dialog"></NewPlan>
+            </v-dialog>
         </div>
-        <v-dialog class="d-flex" v-model="dialog" max-width="800" max-height="800" @input="get_plan_exercise(plan.id)">
-            <template class="d-flex" v-slot:activator="{ on, attrs }">
 
+        <div class="d-flex flex-wrap">
+            <v-card v-for="(plan, index) in plans" :key="index" min-width="230" max-width="250" min-height="300"
+                class="ml-4 mt-8" @click="get_plan_exercise(plan.id), get_Title_Plan(plan.title)">
+                <v-card-title>{{ plan.title }}</v-card-title>
+            </v-card>
+        </div>
+        <v-dialog class="d-flex" v-model="plan_dialog" max-width="800" max-height="800" 
+            @input="get_plan_exercise(plan.id)">
 
-                <div class="d-flex flex-wrap">
-                    <v-card v-for="(plan, index) in plans" :key="index" min-width="230" max-width="250" min-height="300"
-                        class="ml-4 mt-8" @click="get_plan_exercise(plan.id), get_Title_Plan(plan.title)">
-                        <v-card-title>{{ plan.title }}</v-card-title>
-                    </v-card>
-                </div>
-            </template>
             <v-card>
                 <v-card-title>{{ planTitle }}</v-card-title>
 
                 <div v-for="(ex, index) in exercises" :key="index" class="d-flex flex-row">
-                    <h4 class="font-weight-bold ml-6">{{index + 1}}) {{ ex.exercise }}</h4>
+                    <h4 class="font-weight-bold ml-6">{{ index + 1 }}) {{ ex.exercise }}</h4>
                     <h5 class="font-weight-light ml-6">{{ ex.reps }} x {{ ex.sets }} || {{ ex.rest }}s</h5>
                     <v-spacer></v-spacer>
-                    <v-btn class="mr-3" color="primary" text x-small v-on:click="watch_video(ex.exercise)">Guarda esecuzione</v-btn>
+                    <v-btn class="mr-3" color="primary" text x-small v-on:click="watch_video(ex.exercise)">Guarda
+                        esecuzione</v-btn>
 
                 </div>
 
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn small @click="dialog = false" text color="error">
+                    <v-btn small @click="plan_dialog = false" text color="error">
                         close
                     </v-btn>
                 </v-card-actions>
             </v-card>
         </v-dialog>
-        <v-dialog v-model="video_dialog" >
-            <iframe width="560" height="315" src="{{ video_link }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <v-dialog v-model="video_dialog">
+            <iframe width="560" height="315" :src="video.path" title="YouTube video player" frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen></iframe>
             <v-btn v-on:click="close_video_dialog()" text color="error">close</v-btn>
         </v-dialog>
-        
+
+
     </v-app>
 </template>
 
 <script>
 import axios from 'axios'
+import NewPlan from '../components/NewPlan.vue'
 
 export default {
     name: 'HomePage',
+    components: {
+        NewPlan,
+    },
     data() {
         return {
-            dialog: false,
+            plan_dialog: false,
             video_dialog: false,
+            create_dialog: false,
             items: [1, 2, 3, 4, 5],
             plans: [],
             exercises: [],
@@ -74,7 +86,7 @@ export default {
         },
 
         async get_plan_exercise(planID) {
-            this.dialog = true
+            this.plan_dialog = true
             let planid = planID
             const payload = {
                 plan_id: planid
@@ -83,7 +95,7 @@ export default {
             this.exercises = resp.data;
         },
 
-        async watch_video(ExName){
+        async watch_video(ExName) {
             this.video_dialog = true
             let exName = ExName
             const payload = {
@@ -91,15 +103,24 @@ export default {
             }
             console.log(payload.exercise_name)
             let resp = await axios.post('/exercise/video', payload)
-            console.log(resp.data)
             this.video = resp.data
-            console.log(this.video)
-            this.video_link = video.path
+            this.video_link = this.video.path
         },
 
-        close_video_dialog(){
+        close_create_dialog(close_dialog){
+            console.log(close_dialog)
+            this.create_dialog = close_dialog
+        },
+
+        close_video_dialog() {
             this.video_dialog = false
-        }
+        },
+
+        async create_new_plan() {
+            this.create_dialog = true
+        },
+
+        
 
     },
 

@@ -3,7 +3,7 @@ import VueRouter from 'vue-router'
 import LoginPage from '../views/LoginPage'
 import SignupPage from '../views/SignupPage'
 import HomePage from '../views/HomePage'
-
+import video from '../views/video'
 
 Vue.use(VueRouter)
 
@@ -32,6 +32,11 @@ const routes = [
     name: 'Home',
     component: HomePage
   },
+  {
+    path: '/video',
+    name: 'video',
+    component: video
+  }
 
 ]
 

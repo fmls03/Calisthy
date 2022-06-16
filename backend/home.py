@@ -1,4 +1,5 @@
 from crypt import methods
+import json
 from flask import Blueprint, Flask, render_template, request, jsonify, blueprints
 from sqlalchemy import *
 import app
@@ -25,9 +26,10 @@ def sendPlanExercises():
 
 @home_bp.route('/exercise/video', methods=['GET', 'POST'])
 def watchVideo():
-    video= ''
     if request.method == 'POST':
         payload = request.get_json()
         video = app.Exercise.query.filter_by(name = payload.get('exercise_name')).first()
-        print(video.name)
-    return render_template('video.html', video=video)
+        app.db.session.remove()
+        return jsonify(video)
+    
+    

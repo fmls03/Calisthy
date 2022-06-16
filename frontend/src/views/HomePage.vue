@@ -34,6 +34,11 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
+        <v-dialog v-model="video_dialog" >
+            <iframe width="560" height="315" src="{{ video_link }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <v-btn v-on:click="close_video_dialog()" text color="error">close</v-btn>
+        </v-dialog>
+        
     </v-app>
 </template>
 
@@ -45,10 +50,13 @@ export default {
     data() {
         return {
             dialog: false,
+            video_dialog: false,
             items: [1, 2, 3, 4, 5],
             plans: [],
             exercises: [],
-            planTitle: ''
+            planTitle: '',
+            video: {},
+            video_link: ''
         }
     },
     methods: {
@@ -76,6 +84,7 @@ export default {
         },
 
         async watch_video(ExName){
+            this.video_dialog = true
             let exName = ExName
             const payload = {
                 exercise_name: exName
@@ -83,7 +92,13 @@ export default {
             console.log(payload.exercise_name)
             let resp = await axios.post('/exercise/video', payload)
             console.log(resp.data)
-            window.location.replace('http://localhost:5000/exercise/video')
+            this.video = resp.data
+            console.log(this.video)
+            this.video_link = video.path
+        },
+
+        close_video_dialog(){
+            this.video_dialog = false
         }
 
     },

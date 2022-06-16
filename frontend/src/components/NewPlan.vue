@@ -3,16 +3,31 @@
         <v-card-title>
             Crea nuova scheda
         </v-card-title>
-            <p>
-                <v-text-field label="Nome della scheda" v-model="plan_name"></v-text-field>
-            </p>
-            <div>
-                <v-select label="Exercise" :items="list_exercises" item-text="name" v-mode="exercise_name" outlined></v-select>
-                <v-input type="number" label="reps" v-model="exercise.reps"></v-input>
-            </div>
-            <p>{{exercise.name}}</p>
-            <p>{{exercise.reps}}</p>
-            <v-btn>Aggiungi esercizio</v-btn>
+            <v-text-field class="ml-5" label="Nome della scheda" v-model="plan_name"></v-text-field>
+            <table class="ml-5 mb-5">
+                <tr>
+                    <th>N</th>
+                    <th>Exercise</th>
+                    <th>Reps</th>
+                    <th>Sets</th>
+                    <th>Rest</th>
+                </tr>
+                <tr v-for="(ex, index) in exercises" :key="index">
+                    <th class="font-weight-light" >{{index + 1}}</th>
+                    <th class="font-weight-light">{{ex.exercise}}</th>
+                    <th class="font-weight-light">{{ex.reps}}</th>
+                    <th class="font-weight-light">{{ex.sets}}</th>
+                    <th class="font-weight-light"   >{{ex.rest}}s</th>
+                </tr>
+            </table>
+
+            <div class="d-flex flex-row">
+                <v-select label="Exercise" :items="list_exercises" item-text="name" v-model="exercise"  outlined></v-select>
+                <v-text-field type="number" label="reps" v-model="reps"></v-text-field>
+                <v-text-field type="number" label="sets" v-model="sets"></v-text-field>
+                <v-text-field type="number" label="rest" v-model="rest"></v-text-field>
+            </div>            
+            <v-btn @click="add_new_exercise">Aggiungi esercizio</v-btn>
         <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn @click="send_close" text color="error">close</v-btn>
@@ -30,13 +45,12 @@ export default{
         return{
             close_dialog: this.create_dialog,
             list_exercises: [],
-            new_plan: [
-                {
-                    exercise: 'miao',
-                    reps: 'bau',
-                    sets: 'ciao',
-                    rest: 'oajd',
-            }],
+            plan_name: '',
+            exercise: '',
+            reps: '',
+            sets: '',
+            rest: '',
+            exercises:[],
         }
     },
     methods: {
@@ -44,6 +58,17 @@ export default{
             this.close_dialog = false
             this.$emit('close', this.close_dialog)
         },
+
+        add_new_exercise(){
+            this.exercises.push({
+                exercise: this.exercise,
+                reps: this.reps,
+                sets: this.sets,
+                rest: this.rest,
+            });
+            console.log(this.exercises)
+        },
+
         async get_exercises_list(){
             let resp = await axios.get('exercises/list')
             this.list_exercises = resp.data
@@ -57,3 +82,20 @@ export default{
     }
 }
 </script>
+
+<style>
+.v-text-field{
+    margin-right: 22px;
+}
+
+.v-select{
+    margin-left: 22px !important;
+    margin-right: 22px !important;
+}
+
+
+th {
+  text-align: left;
+}
+
+</style>

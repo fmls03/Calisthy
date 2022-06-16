@@ -36,5 +36,6 @@ def watchVideo():
 def sendExercisesList():
     if request.method == 'GET':
         exercises_list = app.Exercise.query.all()
+        app.db.session.remove()
         return jsonify(exercises_list)
 

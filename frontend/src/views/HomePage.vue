@@ -4,7 +4,7 @@
             <h1 class="mt-10 ml-4">Le tue schede</h1>
             <v-btn width="200" class="mt-10" color="primary" text v-on:click="create_new_plan()"> Crea nuova scheda
             </v-btn>
-            <v-dialog v-model="create_dialog" persistent>
+            <v-dialog max-width="1000px" v-model="create_dialog" persistent>
                 <NewPlan :exercises="exercises" :create_dialog="create_dialog" @close="close_create_dialog"></NewPlan>
             </v-dialog>
         </div>
@@ -38,7 +38,7 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
-        <v-dialog v-model="video_dialog">
+        <v-dialog width="560" height="315" v-model="video_dialog">
             <iframe width="560" height="315" :src="video.path" title="YouTube video player" frameborder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowfullscreen></iframe>

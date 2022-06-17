@@ -10,9 +10,10 @@
         </div>
 
         <div class="d-flex flex-wrap">
-            <v-card v-for="(plan, index) in plans" :key="index" min-width="230" max-width="250" min-height="300"
+            <v-card v-for="(plan, index) in plans" :key="index" min-width="230" max-width="250" min-height="300" :elevation="4"
                 class="ml-4 mt-8" @click="get_plan_exercise(plan.id), get_Title_Plan(plan.title)">
                 <v-card-title>{{ plan.title }}</v-card-title>
+                <h5 class="ml-4 font-weight-light"> {{plan.description }} </h5>
             </v-card>
         </div>
         <v-dialog class="d-flex" v-model="plan_dialog" max-width="800" max-height="800" 
@@ -31,10 +32,9 @@
                 </div>
 
                 <v-card-actions>
+                    <v-btn class="mt-2 ml-1" small @click="delete_dialog = true" color="error">Elimina</v-btn>
                     <v-spacer></v-spacer>
-                    <v-btn small @click="plan_dialog = false" text color="error">
-                        close
-                    </v-btn>
+                    <v-btn small @click="plan_dialog = false" text color="error">close</v-btn>
                 </v-card-actions>
             </v-card>
         </v-dialog>
@@ -45,7 +45,20 @@
             <v-btn v-on:click="close_video_dialog()" text color="error">close</v-btn>
         </v-dialog>
 
+        <v-dialog width="350" v-model="delete_dialog" persistent>
+            <v-card>
+                <v-card-title>Sei sicuro di eliminarlo?</v-card-title>
+                <v-card-actions>
+                    <v-btn class="mt-2 ml-1" small @click="delete_plan" text color="error">Si</v-btn>
+                    <v-spacer></v-spacer>
+                    <v-btn small @click="delete_dialog = false" text color="error">no</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
 
+        <v-snackbar v-model="snackbar">
+            {{alert}}
+        </v-snackbar>
     </v-app>
 </template>
 
@@ -63,12 +76,16 @@ export default {
             plan_dialog: false,
             video_dialog: false,
             create_dialog: false,
+            delete_dialog: false,
             items: [1, 2, 3, 4, 5],
             plans: [],
+            plan_id: '',
             exercises: [],
             planTitle: '',
             video: {},
-            video_link: ''
+            video_link: '',
+            alert: '',
+            snackbar: false
         }
     },
     methods: {
@@ -87,9 +104,9 @@ export default {
 
         async get_plan_exercise(planID) {
             this.plan_dialog = true
-            let planid = planID
+            this.plan_id = planID
             const payload = {
-                plan_id: planid
+                plan_id: this.plan_id
             }
             let resp = await axios.post(`/user/home/exercises`, payload);
             this.exercises = resp.data;
@@ -119,6 +136,20 @@ export default {
         async create_new_plan() {
             this.create_dialog = true
         },
+
+        async delete_plan(){
+            const payload = {
+                plan_id: this.plan_id
+            }
+            let resp = await axios.post('user/delete/plan', payload)
+            console.log(resp)
+            this.delete_dialog = false,
+            this.plan_dialog = false,
+            this.alert = resp.data,
+            this.snackbar = true,
+            setTimeout(this.snackbar = false, 5000)
+            this.get_training_plans()
+        }
 
         
 

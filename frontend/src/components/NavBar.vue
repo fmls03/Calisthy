@@ -3,7 +3,8 @@
     <v-toolbar-title>{{ $route.name }}</v-toolbar-title>
     <v-spacer></v-spacer>
 
-    <div v-if="$session.get('username') != null">
+    <div v-if="$session.get('username') != null" class="d-flex flex-row">
+      <p class="mt-4 mr-6">{{$session.get('username')}}</p>
       <v-icon class="mr-2" height="20" width="20" v-on:click="logout">mdi-logout</v-icon>
     </div>
     <div>
@@ -11,6 +12,7 @@
         class="mr-2"></v-img>
       <v-img v-else max-height="20" max-width="20" src="./icons/switch_theme.png" class="mr-2"></v-img>
     </div>
+
 
     <v-switch :input-value="$vuetify.theme.dark" class="mt-5  " @change="darkMode"></v-switch>
   </v-app-bar>

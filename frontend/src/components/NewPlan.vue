@@ -7,7 +7,7 @@
             <table class="ml-5 mb-5">
                 <tr>
                     <th>N</th>
-                    <th>Exercise</th>
+                    <th>Esercizio</th>
                     <th>Reps</th>
                     <th>Sets</th>
                     <th>Rest</th>
@@ -22,7 +22,7 @@
             </table>
 
             <div class="d-flex flex-row">
-                <v-select label="Exercise" :items="list_exercises" item-text="name" v-model="exercise"  outlined></v-select>
+                <v-select label="Esercizio" :items="list_exercises" item-text="name" v-model="exercise"  outlined></v-select>
                 <v-text-field type="number" label="reps" v-model="reps"></v-text-field>
                 <v-text-field type="number" label="sets" v-model="sets"></v-text-field>
                 <v-text-field type="number" label="rest" v-model="rest"></v-text-field>
@@ -30,7 +30,8 @@
             <v-btn @click="add_new_exercise">Aggiungi esercizio</v-btn>
         <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn @click="send_close" text color="error">close</v-btn>
+            <v-btn @click="send_new_plan" text color="primary">Salva</v-btn>
+            <v-btn @click="send_close" text color="error">Annulla</v-btn>
         </v-card-actions>
         
     </v-card>
@@ -57,6 +58,7 @@ export default{
         send_close(){
             this.close_dialog = false
             this.$emit('close', this.close_dialog)
+            location.reload()
         },
 
         add_new_exercise(){
@@ -74,6 +76,19 @@ export default{
             this.list_exercises = resp.data
             console.log(this.list_exercises.name)
         },
+
+        async send_new_plan(){
+            const payload = {
+                plan_name: this.plan_name,
+                exercises: this.exercises,
+                creator: this.$session.get('username')
+            }
+            console.log(payload.exercises)
+            let resp = await axios.post('user/new_plan', payload)
+            console.log(resp)
+
+            this.send_close()
+        }
 
         
     },

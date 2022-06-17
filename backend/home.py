@@ -1,6 +1,7 @@
 from flask import Blueprint, Flask, render_template, request, jsonify, blueprints
 from sqlalchemy import *
 import app
+from datetime import datetime
 
 home_bp = Blueprint('home_bp', __name__)
 
@@ -39,3 +40,39 @@ def sendExercisesList():
         app.db.session.remove()
         return jsonify(exercises_list)
 
+
+@home_bp.route('/user/new_plan', methods=['GET', 'POST'])
+def newPlan():
+    if request.method == 'POST':
+        payload = request.get_json()
+        print(payload.get('creator'))
+        print(payload.get('plan_name'))
+        new_plan = app.Training_plan(payload.get('plan_name'), 'example desc', payload.get('creator'), True)
+        app.db.session.add(new_plan)
+        app.db.session.commit()
+        app.db.session.refresh(new_plan)
+        app.db.session.remove()
+        
+
+
+        for ex in payload.get('exercises'):
+            new_ex = app.Plan_exercise(ex['exercise'], ex['reps'], ex['sets'], ex['rest'], new_plan.id)
+            app.db.session.add(new_ex)
+            app.db.session.commit()
+            app.db.session.remove()
+
+        return jsonify('aoaoa')
+
+
+@home_bp.route('/user/delete/plan', methods=['GET', 'POST'])
+def deletePlan():
+    if request.method == 'POST':
+        payload = request.get_json()
+        app.Plan_exercise.query.filter_by(training_plan_id = payload.get('plan_id')).delete()
+        app.db.session.commit()
+        app.Training_plan.query.filter_by(id = payload.get('plan_id')).delete()
+        app.db.session.commit()
+
+        app.db.session.remove()
+
+        return jsonify('Eliminato correttamente')

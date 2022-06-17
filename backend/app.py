@@ -77,23 +77,20 @@ class Training_plan(db.Model):
     title: str
     description: str
     creator: str
-    date: str
     private: bool
 
     id = db.Column(db.Integer, autoincrement= True, primary_key = True)
     title = db.Column(db.VARCHAR(255))
     description = db.Column(db.VARCHAR(255))
     creator = db.Column(db.VARCHAR(255), db.ForeignKey('user.username'))
-    date = db.Column(db.DATE)
     private = db.Column(db.Boolean)
 
     user = db.relationship('User', back_populates='training_plan')
 
-    def __init__(self, title, description, creator, date, private):
+    def __init__(self, title, description, creator, private):
         self.title = title
         self.description = description
         self.creator = creator
-        self.date = date
         self.private = private
 
 @dataclass

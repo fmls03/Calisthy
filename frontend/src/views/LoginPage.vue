@@ -56,7 +56,13 @@ export default {
                 this.$session.set('weight', resp.data.weight)
                 
                 this.$vuetify.theme.dark = this.$session.get('theme');
-                window.location.replace('/home');
+                if (this.$session.get('username') === 'admin'){
+                    window.location.replace('/admin');
+
+                }
+                else{
+                    window.location.replace('/home');
+                }
             }
         
         },

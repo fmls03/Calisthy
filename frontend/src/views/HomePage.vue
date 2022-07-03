@@ -21,16 +21,26 @@
 
             <v-card>
                 <v-card-title>{{ planTitle }}</v-card-title>
-
-                <div v-for="(ex, index) in exercises" :key="index" class="d-flex flex-row">
-                    <h4 class="font-weight-bold ml-6">{{ index + 1 }}) {{ ex.exercise }}</h4>
-                    <h5 class="font-weight-light ml-6">{{ ex.reps }} x {{ ex.sets }} || {{ ex.rest }}s</h5>
-                    <v-spacer></v-spacer>
-                    <v-btn class="mr-3" color="primary" text x-small v-on:click="watch_video(ex.exercise)">Guarda
+                
+                <table>
+                    <tr>
+                        <th><h5 class="font-weight-light ml-6">N.</h5></th>
+                        <th><h5 class="font-weight-light ml-2">Exercise</h5></th>
+                        <th><h5 class="font-weight-light ml-4">Reps</h5></th>
+                        <th><h5 class="font-weight-light ml-2">Sets</h5></th>
+                        <th><h5 class="font-weight-light ml-2">Rest (s)</h5></th>
+                    </tr>
+                    <tr v-for="(ex, index) in exercises" :key="index" >
+                        <th><h4 class="font-weight-bold ml-6">{{ index + 1 }})</h4></th>
+                        <th><h4 class="font-weight-bold ml-2"> {{ ex.exercise }}</h4></th>
+                        <th><h5 class="font-weight-light ml-4">{{ ex.reps }}</h5></th>
+                        <th><h5 class="font-weight-light ml-2">{{ ex.sets }}</h5></th>
+                        <th><h5 class="font-weight-light ml-2">{{ ex.rest }}s</h5></th>
+                        <v-btn class="mr-3" color="primary" text x-small v-on:click="watch_video(ex.exercise)">Guarda
                         esecuzione</v-btn>
 
-                </div>
-
+                    </tr>
+                </table>
                 <v-card-actions>
                     <v-btn class="mt-2 ml-1" small @click="delete_dialog = true" color="error">Elimina</v-btn>
                     <v-spacer></v-spacer>
@@ -42,7 +52,7 @@
             <iframe width="560" height="315" :src="video.path" title="YouTube video player" frameborder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowfullscreen></iframe>
-            <v-btn v-on:click="close_video_dialog()" text color="error">close</v-btn>
+            <v-btn v-on:click="close_video_dialog()" color="error">close</v-btn>
         </v-dialog>
 
         <v-dialog width="350" v-model="delete_dialog" persistent>
@@ -165,3 +175,12 @@ export default {
     }
 }
 </script>
+
+<style>
+#watch-video-col{
+    
+}
+#mr{
+    margin-right: 50vw;
+}
+</style>

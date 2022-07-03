@@ -38,7 +38,7 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
-        <v-dialog width="560" height="315" v-model="video_dialog">
+        <v-dialog width="560" height="315" v-model="video_dialog" persistent>
             <iframe width="560" height="315" :src="video.path" title="YouTube video player" frameborder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowfullscreen></iframe>
@@ -65,6 +65,7 @@
 <script>
 import axios from 'axios'
 import NewPlan from '../components/NewPlan.vue'
+import $ from 'jquery'
 
 export default {
     name: 'HomePage',
@@ -131,6 +132,9 @@ export default {
 
         close_video_dialog() {
             this.video_dialog = false
+            var video = $("iframe").attr("src");
+            $("iframe").attr("src","");
+            $("iframe").attr("src",video);
         },
 
         async create_new_plan() {

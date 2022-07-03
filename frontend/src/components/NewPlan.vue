@@ -27,7 +27,8 @@
                 <v-text-field type="number" label="sets" v-model="sets"></v-text-field>
                 <v-text-field type="number" label="rest" v-model="rest"></v-text-field>
             </div>            
-            <v-btn @click="add_new_exercise">Aggiungi esercizio</v-btn>
+            <h4 class="align-self-center mb-3  red--text" color="brown">{{error}}</h4>
+            <v-btn class="align-self-center" @click="add_new_exercise()" color="primary" width="200">Aggiungi esercizio</v-btn>
         <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn @click="send_new_plan" text color="primary">Salva</v-btn>
@@ -52,23 +53,31 @@ export default{
             sets: '',
             rest: '',
             exercises:[],
+            error: ''
         }
     },
     methods: {
         send_close(){
+            
             this.close_dialog = false
             this.$emit('close', this.close_dialog)
             location.reload()
         },
 
         add_new_exercise(){
-            this.exercises.push({
-                exercise: this.exercise,
-                reps: this.reps,
-                sets: this.sets,
-                rest: this.rest,
-            });
-            console.log(this.exercises)
+            if (this.exercise != "" && this.reps != "" && this.sets != "" && this.rest != "" ){ 
+                this.error = ''
+                this.exercises.push({
+                    exercise: this.exercise,
+                    reps: this.reps,
+                    sets: this.sets,
+                    rest: this.rest,
+                });
+                console.log(this.exercises)
+            }
+            else{
+                this.error = '* Compila tutti i campi *'
+            }
         },
 
         async get_exercises_list(){
@@ -78,17 +87,26 @@ export default{
         },
 
         async send_new_plan(){
-            const payload = {
-                plan_name: this.plan_name,
-                exercises: this.exercises,
-                creator: this.$session.get('username')
+            if (this.plan_name === ''){
+                this.error = '* Devi inserire il nome della scheda *'
             }
-            console.log(payload.exercises)
-            let resp = await axios.post('user/new_plan', payload)
-            console.log(resp)
+            else if (!this.exercises.lenght){
+                this.error = '* Devi inserire almeno un esercizio *'
+            }
+            else{
+                this.error = ''
+                const payload = {
+                    plan_name: this.plan_name,
+                    exercises: this.exercises,
+                    creator: this.$session.get('username')
+                }
+                console.log(payload.exercises)
+                let resp = await axios.post('user/new_plan', payload)
+                console.log(resp)
 
-            this.send_close()
-        }
+                this.send_close()
+            }
+            }
 
         
     },

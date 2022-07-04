@@ -61,14 +61,8 @@ export default {
                     this.msg = resp.data;
                 }
                 else{
-                    this.$session.set('username', resp.data.username)
-                    this.$session.set('email', resp.data.email)
-                    this.$session.set('theme', resp.data.theme)
-                    this.$session.set('height', resp.data.height)
-                    this.$session.set('weight', resp.data.weight)
-                        
-                    this.$vuetify.theme.dark = this.$session.get('theme');
-                    window.location.replace('/home');
+                    
+                    window.location.replace('/login');
                     
                 }
             }

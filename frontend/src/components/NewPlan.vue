@@ -90,9 +90,7 @@ export default{
             if (this.plan_name === ''){
                 this.error = '* Devi inserire il nome della scheda *'
             }
-            else if (!this.exercises.lenght){
-                this.error = '* Devi inserire almeno un esercizio *'
-            }
+           
             else{
                 this.error = ''
                 const payload = {

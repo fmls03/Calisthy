@@ -13,6 +13,7 @@ from login import *
 from signup import *
 from changeTheme import *
 from home import *
+from admin import *
 
 secret_key = str(os.urandom(256))
 
@@ -36,6 +37,7 @@ app.register_blueprint(login_bp)
 app.register_blueprint(signup_bp)
 app.register_blueprint(changeTheme_bp)
 app.register_blueprint(home_bp)
+app.register_blueprint(admin_bp)
 
 
 @dataclass
@@ -99,17 +101,14 @@ class Exercise(db.Model):
 
     id: int
     name: str
-    description: str
     path: str
 
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     name = db.Column(db.VARCHAR(255), unique = True, nullable = False)
-    description = db.Column(db.VARCHAR(600))
     path = db.Column(db.VARCHAR(255), nullable = False)
 
-    def __init__(self, name, description, path):
+    def __init__(self, name, path):
         self.name = name
-        self.description = description
         self.path = path
 
 @dataclass

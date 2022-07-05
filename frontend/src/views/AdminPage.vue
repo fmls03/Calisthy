@@ -101,7 +101,7 @@
                             <h6 class="ml-5">{{ ex.path }}</h6>
                         </th>
                         <th>
-                            <v-btn @click="openEditDialog(ex.name, ex.path)" class="ml-6 align-self-center" color="primary" x-small>
+                            <v-btn @click="openEditDialog(ex.id, ex.name, ex.path)" class="ml-6 align-self-center" color="primary" x-small>
                                 Modifica</v-btn>
                         </th>
                         <th>
@@ -116,7 +116,7 @@
                                 <v-text-field class="ml-6" label="name" v-model="name"></v-text-field>
                                 <v-text-field class="ml-6" label="path" v-model="path"></v-text-field>
                                 <v-card-actions>
-                                    <v-btn v-if="name && path" @click="editExercise(ex.id)" color="primary" text>Salva</v-btn>
+                                    <v-btn v-if="name && path" @click="editExercise()" color="primary" text>Salva</v-btn>
                                     <v-btn v-else disabled color="primary" text>Salva</v-btn>
                                     <v-spacer></v-spacer>
                                     <v-btn color="error" @click="closeEditDialog()" text>Annulla</v-btn>
@@ -145,6 +145,7 @@ export default {
             edit_exercise_dialog: false,
             users: [],
             exercises: [],
+            id: '',
             name: '',
             path: '',
 
@@ -173,19 +174,21 @@ export default {
             this.confirm_delete_dialog = false
         },
 
-        async editExercise(exerciseID){
+        async editExercise(){
             const paylaod = {
+                id: this.id,
                 name: this.name,
                 path: this.path,
             }
-            await axios.put(`admin/exercises/edit/${exerciseID}`, paylaod)
+            await axios.put(`admin/exercises/edit`, paylaod)
             this.getExercises()
             this.closeEditDialog()
         },
 
-        openEditDialog(ExNAME, ExPATH){
+        openEditDialog(ExID, ExNAME, ExPATH){
+            this.id = ExID,
             this.name = ExNAME,
-            this.path = ExPATH
+            this.path = ExPATH,
             this.edit_exercise_dialog = true
         },
 

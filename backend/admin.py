@@ -1,6 +1,4 @@
-
-import json
-from flask import Flask, Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request
 from sqlalchemy import *
 import app
 
@@ -30,15 +28,11 @@ def deleteUser(userID):
         return jsonify('User deleted')
 
 
-@admin_bp.route('/admin/exercises/edit/<exerciseID>', methods=['PUT'])
-def editExercise(exerciseID):
+@admin_bp.route('/admin/exercises/edit', methods=['PUT'])
+def editExercise():
     if request.method == 'PUT':
         payload = request.get_json()
-        ex = app.Exercise.query.filter_by(id = exerciseID).first()
-        ex.name = payload.get('name')
-        ex.path = payload.get('path')
-
-        app.db.session.merge(ex)
+        app.Exercise.query.filter_by(id = payload.get('id')).update(dict(name=payload.get('name'), path=payload.get('path')))
         app.db.session.commit()
         app.db.session.remove()
 

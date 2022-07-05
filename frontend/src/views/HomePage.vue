@@ -93,8 +93,7 @@ export default {
             plan_id: '',
             exercises: [],
             planTitle: '',
-            video: {},
-            video_link: '',
+            video: [],
             alert: '',
             snackbar: false
         }
@@ -132,7 +131,6 @@ export default {
             console.log(payload.exercise_name)
             let resp = await axios.post('/exercise/video', payload)
             this.video = resp.data
-            this.video_link = this.video.path
         },
 
         close_create_dialog(close_dialog){

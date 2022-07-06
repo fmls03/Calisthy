@@ -134,7 +134,6 @@ export default {
         },
 
         close_create_dialog(close_dialog){
-            console.log(close_dialog)
             this.create_dialog = close_dialog
         },
 

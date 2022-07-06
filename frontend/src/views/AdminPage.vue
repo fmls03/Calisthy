@@ -52,17 +52,17 @@
                             <h6 class="ml-4">{{ u.email }}</h6>
                         </th>
                         <th>
-                            <v-btn @click="confirm_delete_dialog = true" class="ml-6 align-self-center" color="error"
+                            <v-btn @click="confirm_user_delete_dialog = true" class="ml-6 align-self-center" color="error"
                                 x-small>Elimina</v-btn>
                         </th>
 
-                        <v-dialog width="350" v-model="confirm_delete_dialog" persistent>
+                        <v-dialog width="350" v-model="confirm_user_delete_dialog" persistent>
                             <v-card>
                                 <v-card-title>Sei sicuro di eliminarlo?</v-card-title>
                                 <v-card-actions>
                                     <v-btn class="mt-2 ml-1" small @click="deleteUser(u.id)" text color="error">Si</v-btn>
                                     <v-spacer></v-spacer>
-                                    <v-btn small @click="confirm_delete_dialog = false" text color="error">no</v-btn>
+                                    <v-btn small @click="confirm_user_delete_dialog = false" text color="error">no</v-btn>
                                 </v-card-actions>
                             </v-card>
                         </v-dialog>
@@ -71,11 +71,19 @@
             </v-card>
         </v-dialog>
 
-
+        
 
         <v-dialog v-model="exercises_dialog" width="800">
             <v-card>
-                <v-card-title>Esercizi</v-card-title>
+                <div class="d-flex flex-row justify-space-between align-center mr-5">
+                    <v-card-title>Esercizi</v-card-title>
+                    <v-btn @click="addNewExercise()" color="primary" x-small>Aggiungi esercizio</v-btn>
+                </div>
+                
+                <v-dialog v-model="add_exercise_dialog" persistent>
+                    <AdminAddExercise :add_exercise_dialog="add_exercise_dialog" @close="close_add_exercise_dialog" ></AdminAddExercise>
+                </v-dialog>
+
                 <table>
                     <tr>
                         <th>
@@ -105,9 +113,20 @@
                                 Modifica</v-btn>
                         </th>
                         <th>
-                            <v-btn  class="ml-3 align-self-center" color="error" x-small>
+                            <v-btn @click="confirm_exercise_delete_dialog = true" class="ml-3 align-self-center" color="error" x-small>
                                 Elimina</v-btn>
                         </th>
+
+                        <v-dialog width="350" v-model="confirm_exercise_delete_dialog" persistent>
+                            <v-card>
+                                <v-card-title>Sei sicuro di eliminarlo?</v-card-title>
+                                <v-card-actions>
+                                    <v-btn class="mt-2 ml-1" small @click="delete_exercise(ex.id)" text color="error">Si</v-btn>
+                                    <v-spacer></v-spacer>
+                                    <v-btn small @click="confirm_exercise_delete_dialog = false" text color="error">no</v-btn>
+                                </v-card-actions>
+                            </v-card>
+                        </v-dialog>
 
                         <v-dialog v-model="edit_exercise_dialog" width="500" persistent>
                             <v-card>
@@ -135,14 +154,20 @@
 
 <script>
 import axios from 'axios'
+import AdminAddExercise from '../components/AdminAddExercise.vue'
 
 export default {
+    components: {
+        AdminAddExercise
+    },
     data() {
         return {
             users_dialog: false,
             exercises_dialog: false,
-            confirm_delete_dialog: false,
+            confirm_user_delete_dialog: false,
+            confirm_exercise_delete_dialog: false,
             edit_exercise_dialog: false,
+            add_exercise_dialog: false,
             users: [],
             exercises: [],
             id: '',
@@ -171,7 +196,7 @@ export default {
         async deleteUser(userID) {
             await axios.delete(`admin/users/delete/${userID}`)
             this.getUsers()
-            this.confirm_delete_dialog = false
+            this.confirm_user_delete_dialog = false
         },
 
         async editExercise(){
@@ -185,6 +210,12 @@ export default {
             this.closeEditDialog()
         },
 
+        async delete_exercise(ExID){
+            await axios.delete(`admin/exercises/delete/${ExID}`)
+            this.getExercises()
+            this.confirm_exercise_delete_dialog = false
+        },
+
         openEditDialog(ExID, ExNAME, ExPATH){
             this.id = ExID,
             this.name = ExNAME,
@@ -196,7 +227,17 @@ export default {
             this.edit_exercise_dialog = false,
             this.name = ''
             this.path = ''
-        }
+        },
+
+        addNewExercise(){
+            this.add_exercise_dialog = true
+        },
+
+        close_add_exercise_dialog(close_dialog){
+            this.getExercises()
+            this.add_exercise_dialog = close_dialog
+        },
+
     },
     mounted() {
         this.$vuetify.theme.dark = this.$session.get('theme');

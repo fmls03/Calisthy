@@ -84,7 +84,7 @@ class Training_plan(db.Model):
     id = db.Column(db.Integer, autoincrement= True, primary_key = True)
     title = db.Column(db.VARCHAR(255))
     description = db.Column(db.VARCHAR(255))
-    creator = db.Column(db.VARCHAR(255), db.ForeignKey('user.username'))
+    creator = db.Column(db.VARCHAR(255), db.ForeignKey('user.username', onupdate='cascade'))
     private = db.Column(db.Boolean)
 
     user = db.relationship('User', back_populates='training_plan')
@@ -122,11 +122,11 @@ class Plan_exercise(db.Model):
     training_plan_id: int
 
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    exercise = db.Column(db.VARCHAR(255), db.ForeignKey('exercise.name'), nullable=False)
+    exercise = db.Column(db.VARCHAR(255), db.ForeignKey('exercise.name', onupdate='cascade'), nullable=False)
     sets = db.Column(db.Integer, nullable=False)
     reps = db.Column(db.Integer, nullable=False)
     rest = db.Column(db.Integer, nullable=False)
-    training_plan_id = db.Column(db.Integer, db.ForeignKey('training_plan.id'), nullable = False) 
+    training_plan_id = db.Column(db.Integer, db.ForeignKey('training_plan.id', onupdate='cascade'), nullable = False) 
     ex = db.relationship('Exercise')
     tr = db.relationship('Training_plan')
 
@@ -139,14 +139,6 @@ class Plan_exercise(db.Model):
         self.rest = rest
         self.training_plan_id = training_plan_id
 
-
-
-
-
-def fn():
-    return jsonify('bau')
-
-print(app)
 
 if __name__ == '__main__':
     app.run()

@@ -155,6 +155,7 @@
 <script>
 import axios from 'axios'
 import AdminAddExercise from '../components/AdminAddExercise.vue'
+import check_user from '../components/libs/check_user'
 
 export default {
     components: {
@@ -238,8 +239,10 @@ export default {
             this.add_exercise_dialog = close_dialog
         },
 
+
     },
     mounted() {
+        check_user()
         this.$vuetify.theme.dark = this.$session.get('theme');
         this.getUsers();
         this.getExercises()
